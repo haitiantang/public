@@ -67,4 +67,26 @@ cc.Class({
         return random;
     },
     
+    //  通用功能，切换场景的时候，会自动设置适配
+   setResolutionPolicy: function() {
+        let f = function () {
+            var size = cc.view.getFrameSize();
+            var iphonx = size.height/size.width >= 2?true:false;
+            if (cc.sys.isMobile) {
+                cc.log('手机场景适配');
+                if(iphonx){
+                    cc.view.setDesignResolutionSize(750, 1334, cc.ResolutionPolicy.FIXED_HEIGHT);
+                }else{
+                    cc.view.setDesignResolutionSize(750, 1334, cc.ResolutionPolicy.FIXED_WIDTH);
+                }
+                cc.Canvas.instance['alignWithScreen']();
+            } else {
+                cc.log('电脑场景适配');
+                cc.view.setDesignResolutionSize(750, 1334, cc.ResolutionPolicy.SHOW_ALL);
+                cc.Canvas.instance['alignWithScreen']();
+            }
+        }
+        f();
+        cc.director.on(cc.Director.EVENT_BEFORE_SCENE_LOADING, f);
+    },
 });
